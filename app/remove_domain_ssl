@@ -1,19 +1,23 @@
 #!/bin/bash
 # get array LETSENCRYPT_CONTAINERS
-
+source /app/functions.sh
 unset LETSENCRYPT_CONTAINERS
 source /app/letsencrypt_service_enabled_domain
 #echo $1
-# add containerid (cid) to LETSENCRYPT_CONTAINERS
+# remove containerid (cid) to LETSENCRYPT_CONTAINERS
 
-LETSENCRYPT_CONTAINERS+=($1)
 LETSENCRYPT_CONTAINERS=($(printf "%s\n" "${LETSENCRYPT_CONTAINERS[@]}" |  sort -u ))
 
+LETSENCRYPT_CONTAINERS=("$LETSENCRYPT_CONTAINERS[@]/$1}")
 cat > /app/letsencrypt_service_enabled_domain  <<EOL
 LETSENCRYPT_CONTAINERS=(${LETSENCRYPT_CONTAINERS[@]})
 EOL
 
+#remove domain folder
+rm -f /etc/nginx/certs/$2.{crt,key,dhparam.pem}
+
 source /app/letsencrypt_service --source-only
 
-update_certs 
+
+update_certs || reload_nginx
 
