@@ -1,6 +1,6 @@
 #!/bin/bash
 # get array LETSENCRYPT_CONTAINERS
-
+source /app/functions.sh
 unset LETSENCRYPT_CONTAINERS
 source /app/letsencrypt_service_enabled_domain
 #echo $1
@@ -15,5 +15,4 @@ EOL
 
 source /app/letsencrypt_service --source-only
 
-update_certs 
-
+update_certs || reload_nginx
