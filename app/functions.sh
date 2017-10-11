@@ -94,7 +94,10 @@ reload_nginx() {
         if [[ -n "${_nginx_proxy_container:-}" ]]; then
             # Reloading nginx in case only certificates had been renewed
             echo "Reloading nginx (using separate container ${_nginx_proxy_container})..."
-            docker_kill "${_nginx_proxy_container}" SIGHUP
+           # docker_kill "${_nginx_proxy_container}" SIGHUP
+	    docker_exec "${_nginx_proxy_container}" \
+                        '[ "sh", "-c", "/usr/local/bin/docker-gen -only-exposed /app/nginx.tmpl /etc/nginx/conf.d/default.conf; /usr/sbin/nginx -s reload" ]'
+       
         fi
     else
         if [[ -n "${_nginx_proxy_container:-}" ]]; then
