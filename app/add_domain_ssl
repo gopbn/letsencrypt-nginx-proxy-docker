@@ -1,9 +1,9 @@
 #!/bin/bash
 # get array LETSENCRYPT_CONTAINERS
-source /app/functions.sh
+
 unset LETSENCRYPT_CONTAINERS
 source /app/letsencrypt_service_enabled_domain
-#echo $1
+
 # add containerid (cid) to LETSENCRYPT_CONTAINERS
 
 LETSENCRYPT_CONTAINERS+=($1)
@@ -15,4 +15,5 @@ EOL
 
 source /app/letsencrypt_service --source-only
 
-update_certs || reload_nginx
+update_certs --force-reload-nginx
+
